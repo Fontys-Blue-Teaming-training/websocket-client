@@ -17,6 +17,7 @@ namespace websocket_client
         public SocketClient(IMessageHandler messageHandler)
         {
             handler = messageHandler;
+            handler.SetSocketClient(this);
         }
 
         public void InitClient()
