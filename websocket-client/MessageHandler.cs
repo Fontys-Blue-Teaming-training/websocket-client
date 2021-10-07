@@ -10,12 +10,11 @@ namespace websocket_client
     {
         SocketClient client;
 
-
         public static T ReceiveAsObj(string data)
         {
-            var a = JsonConvert.DeserializeObject<T>(data);
-            Console.WriteLine($"{a}");
-            return a;
+            var obj = JsonConvert.DeserializeObject<T>(data);
+            Console.WriteLine($"{obj}");
+            return obj;
         }
 
         public void SetSocketClient(SocketClient socketClient)
@@ -29,7 +28,5 @@ namespace websocket_client
         }
 
         public abstract void HandleMessage(string message);
-
-
     }
 }
