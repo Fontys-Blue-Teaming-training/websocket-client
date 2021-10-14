@@ -7,7 +7,6 @@ namespace websocket_client
     public interface IMessageHandler
     {
         public void HandleMessage(string message);
-
         public void SetSocketClient(SocketClient socketClient);
     }
 }

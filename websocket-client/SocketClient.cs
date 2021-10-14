@@ -1,19 +1,18 @@
 ﻿using System;
-using Newtonsoft.Json;
 using System.Text;
 using System.Threading.Tasks;
 using WatsonWebsocket;
-
 
 namespace websocket_client
 {
     public class SocketClient
     {
-        readonly WatsonWsClient client = new WatsonWsClient("145.93.58.39", 3002, false);  //client connects to the server, parameters are the servers ip and port.
+        private readonly WatsonWsClient client = null;  //client connects to the server, parameters are the servers ip and port.
         private readonly IMessageHandler handler;
 
-        public SocketClient(IMessageHandler messageHandler)
+        public SocketClient(IMessageHandler messageHandler, string ipAddress)
         {
+            client = new WatsonWsClient(ipAddress, 3002, false);
             handler = messageHandler;
             handler.SetSocketClient(this);
         }
@@ -32,7 +31,7 @@ namespace websocket_client
 
         public async Task SendMessage(string message)
         {
-            await client.SendAsync(JsonConvert.SerializeObject(message));  //client only needs to send message to the server, no ip is needed since there's only 1 server to connect to.
+            await client.SendAsync(message);  //client only needs to send message to the server, no ip is needed since there's only 1 server to connect to.
         }
 
         public void MessageReceived(object sender, MessageReceivedEventArgs args)
