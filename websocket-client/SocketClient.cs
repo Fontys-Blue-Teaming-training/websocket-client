@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using WatsonWebsocket;
 
@@ -9,11 +10,14 @@ namespace websocket_client
     {
         private readonly WatsonWsClient client = null;  //client connects to the server, parameters are the servers ip and port.
         private readonly IMessageHandler handler;
+        private bool isAutoReconnecting = false;
+        private readonly bool autoReconnect;
 
-        public SocketClient(IMessageHandler messageHandler, string ipAddress)
+        public SocketClient(IMessageHandler messageHandler, string ipAddress, bool autoReconnect = true)
         {
             client = new WatsonWsClient(ipAddress, 3002, false);
             handler = messageHandler;
+            this.autoReconnect = autoReconnect;
             handler.SetSocketClient(this);
         }
 
@@ -47,7 +51,19 @@ namespace websocket_client
 
         public void ServerDisconnected(object sender, EventArgs args)
         {
-            Console.WriteLine("Server connected");
+            Console.WriteLine("Server diconnected");
+
+            if(autoReconnect && !isAutoReconnecting)
+            {
+                isAutoReconnecting = true;
+                do
+                {
+                    Console.WriteLine("Trying to auto reconnect...");
+                    Task.Run(() => StartClient());
+                    Thread.Sleep(1000);
+                } while (!client.Connected);
+                isAutoReconnecting = false;
+            }
         }
     }
 }
