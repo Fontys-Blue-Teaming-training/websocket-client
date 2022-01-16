@@ -1,2 +1,3 @@
 # websocket-client
-generic websocket client in C#
+This is the client that runs the websockets in CSharp.
+
